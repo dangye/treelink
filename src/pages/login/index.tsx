@@ -65,7 +65,7 @@ export function Login(){
                 />
 
                 <button 
-                    className="h-9 bg-blue-600 rounded border-0 text-xl font-bold text-white">
+                    className="h-9 bg-blue-600 rounded border-0 text-xl font-bold text-white hover:bg-blue-700">
                     Acessar
                 </button>
             </form>
