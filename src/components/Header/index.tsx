@@ -1,0 +1,27 @@
+import { BiLogOut } from 'react-icons/bi';
+import { Link } from 'react-router';
+
+import { auth } from '../../services/firebaseConnections';
+import { singOut} from 'firebase/auth'
+
+export function Header(){
+
+    async function handleLogout(){
+        await singOut(auth)
+    }
+
+    return(
+        <header className='w-full max-w-2xl mt-4 px-1'>
+            <nav className='w-full bg-white h-12 flex items-center justify-between rounded-md px-3'>
+                <div className='flex gap-4 font-medium *:hover:scale-110'>
+                    <Link to='/'>Home</Link>
+                    <Link to='/admin'>Links</Link>
+                    <Link to='/admin/social'>RedesSociais</Link>
+                </div>
+                <button onClick={handleLogout}>
+                    <BiLogOut size={28} color="#db2629"/>
+                </button>
+            </nav>
+        </header>
+    )
+}
