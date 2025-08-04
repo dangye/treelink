@@ -4,7 +4,14 @@ import { FormEvent, useState, useEffect } from 'react'
 import { FiTrash } from 'react-icons/fi'
 
 import { db } from '../../services/firebaseConnections'
-import { addDoc, collection, onSnapshot, query, doc, orderBy, deleteDoc } from 'firebase/firestore'
+import { 
+    addDoc, 
+    collection, 
+    onSnapshot, 
+    query, 
+    doc, 
+    orderBy, 
+    deleteDoc } from 'firebase/firestore'
 
 interface LinkProps{
     id: string,
@@ -19,13 +26,13 @@ export function Admin(){
     const [nameInput, setNameInput] = useState('')
     const [urlInput, setUrlInput] = useState('')
     const [textColorInput, setTextColorInput] = useState('#F1F1F1')
-    const [bgColorInput, setBgColorInput] = useState('')
+    const [bgColorInput, setBgColorInput] = useState('#FFF')
 
     const [links, setLinks] = useState<LinkProps[]>([])
 
     useEffect(()=>{
         const linksRef = collection(db, 'links')
-        const queryRef = query(linksRef, orderBy('created', 'desc'))
+        const queryRef = query(linksRef, orderBy('created', 'asc'))
 
         const unsub = onSnapshot(queryRef, (snapshot) => {
             
@@ -63,7 +70,7 @@ export function Admin(){
             url: urlInput,
             bg: bgColorInput,
             colorText: textColorInput,
-            crated: new Date()
+            created: new Date()
         })
         .then(()=>{
             alert('link criado com  sucesso')
@@ -74,6 +81,11 @@ export function Admin(){
             console.log(error)
         })
 
+    }
+
+    async function handleDeleteLink(id:string){
+        const docRef = doc(db, "links", id)
+        await deleteDoc(docRef)
     }
 
 
@@ -140,13 +152,12 @@ export function Admin(){
                     <div>
                         <button
                             className='border border-dashed p-1 rounded bg-black hover:bg-gray-700'
+                            onClick={()=> handleDeleteLink(item.id)}
                             ><FiTrash size={18} color='white'/>
                         </button>
                     </div>
             </article>
            ))}
-
-           
 
 
         </div>
