@@ -6,6 +6,14 @@ import { FiTrash } from 'react-icons/fi'
 import { db } from '../../services/firebaseConnections'
 import { addDoc, collection, onSnapshot, query, doc, orderBy, deleteDoc } from 'firebase/firestore'
 
+interface LinkProps{
+    id: string,
+    name: string,
+    url: string,
+    bg: string,
+    color: string
+}
+
 export function Admin(){
 
     const [nameInput, setNameInput] = useState('')
@@ -13,9 +21,33 @@ export function Admin(){
     const [textColorInput, setTextColorInput] = useState('#F1F1F1')
     const [bgColorInput, setBgColorInput] = useState('')
 
+    const [links, setLinks] = useState<LinkProps[]>([])
+
     useEffect(()=>{
         const linksRef = collection(db, 'links')
-    })
+        const queryRef = query(linksRef, orderBy('created', 'desc'))
+
+        const unsub = onSnapshot(queryRef, (snapshot) => {
+            
+            let lista = [] as LinkProps[]
+
+            snapshot.forEach((doc) => {
+                lista.push({
+                    id: doc.id,
+                    name: doc.data().name,
+                    url: doc.data().url,
+                    bg: doc.data().bg,
+                    color: doc.data().colorText,
+                })
+
+            })
+            console.log(lista)
+            setLinks(lista)
+            
+        })
+        return()=>{unsub()}
+        
+    }, [])
 
 
     function handleRegister(e: FormEvent){
@@ -96,20 +128,25 @@ export function Admin(){
             
             <h2 className='font-bold text-white mb-4 text-2xl'>Meus Links</h2>
 
-            {/* {Links.length > 0 && Links.map(item)=> (
+           
+
+           {links.map((item)=> (
             <article 
-            className='flex items-center justify-between w-11/12 max-w-xl rounded py-3 px-2 mb-2 select-none'
-            style={{backgroundColor:{item.bg}, color: {item.colorText}}}
+                key={item.id}
+                className='flex items-center justify-between w-11/12 max-w-xl rounded py-3 px-2 mb-2 select-none'
+                style={{backgroundColor: item.bg, color: item.color}}
             >
-                <p>{item.name}</p>
-                <div>
-                    <button
-                        className='border border-dashed p-1 rounded bg-black'
-                        ><FiTrash size={18} color='white'/>
-                    </button>
-                </div>
+                    <p>{item.name}</p>
+                    <div>
+                        <button
+                            className='border border-dashed p-1 rounded bg-black hover:bg-gray-700'
+                            ><FiTrash size={18} color='white'/>
+                        </button>
+                    </div>
             </article>
-            )} */}
+           ))}
+
+           
 
 
         </div>
