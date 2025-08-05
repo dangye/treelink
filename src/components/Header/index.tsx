@@ -16,7 +16,7 @@ export function Header(){
                 <div className='flex gap-4 font-medium *:hover:scale-110'>
                     <Link to='/'>Home</Link>
                     <Link to='/admin'>Links</Link>
-                    <Link to='/admin/social'>RedesSociais</Link>
+                    <Link to='/admin/social'>Redes Sociais</Link>
                 </div>
                 <button onClick={handleLogout}>
                     <BiLogOut size={28} color="#db2629"/>

@@ -133,7 +133,7 @@ export function Admin(){
                 )}
 
 
-                <button type='submit' className='bg-blue-600 h-9 rounded-md text-white font-medium gap-4'>
+                <button type='submit' className='bg-blue-600 h-9 rounded-md text-white font-medium gap-4 hover:bg-blue-800'>
                     Cadastrar
                 </button>
             </form>
