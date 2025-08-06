@@ -1,9 +1,10 @@
 import { Header } from '../../components/Header'
 import { Input } from '../../components/Input'
 import { FormEvent, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router'
 import { FiTrash } from 'react-icons/fi'
 
-import { db } from '../../services/firebaseConnections'
+import { db, auth } from '../../services/firebaseConnections'
 import { 
     addDoc, 
     collection, 
@@ -12,6 +13,8 @@ import {
     doc, 
     orderBy, 
     deleteDoc } from 'firebase/firestore'
+
+import { signOut, onAuthStateChanged } from 'firebase/auth'
 
 interface LinkProps{
     id: string,
@@ -29,6 +32,30 @@ export function Admin(){
     const [bgColorInput, setBgColorInput] = useState('#FFF')
 
     const [links, setLinks] = useState<LinkProps[]>([])
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const SESSION_DURATION = 60 * 60 * 1000; // 1 hora
+        const loginTime = localStorage.getItem("loginTime");
+
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                navigate("/login", { replace: true });
+                return;
+            }
+
+            if (loginTime && Date.now() - Number(loginTime) > SESSION_DURATION) {
+                signOut(auth).then(() => {
+                localStorage.removeItem("loginTime");
+                navigate("/login", { replace: true });
+                alert("Sessão expirada. Faça login novamente.");
+                });
+            }
+            });
+
+        return () => unsubscribe();
+    }, [navigate]);
 
     useEffect(()=>{
         const linksRef = collection(db, 'links')

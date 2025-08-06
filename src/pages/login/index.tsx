@@ -22,6 +22,7 @@ export function Login(){
         signInWithEmailAndPassword(auth, email, password)
             .then(() => {
                 // Signed in 
+                localStorage.setItem('loginTime', Date.now().toString());//salvar a horas
                 navigate('/admin', {replace: true})
                 console.log('Logado com sucesso')
 
