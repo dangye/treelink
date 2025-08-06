@@ -21,6 +21,8 @@ export function Private({children}: PrivateProps): any{
                     email: user?.email
                 }
 
+                localStorage.setItem("@reactlinks", JSON.stringify(userData))
+
                 setLoading(false)
                 setSigned(true)
 
